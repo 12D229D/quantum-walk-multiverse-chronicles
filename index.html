@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Walk: Multiverse Labyrinth Chronicles</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="brand-icon">🌌</span>
+      <div>
+        <h1>Quantum Walk: Multiverse Labyrinth Chronicles</h1>
+        <p class="subtitle">Propagación Balística Cuántica (σ ∝ t) vs Difusión Clásica (σ ∝ √t) en Grafos Topológicos</p>
+      </div>
+    </div>
+
+    <!-- Header Controls -->
+    <div class="header-controls">
+      <div class="control-group">
+        <label for="lab-select">🗺️ Laberinto:</label>
+        <select id="lab-select"></select>
+      </div>
+
+      <div class="control-group">
+        <label for="coin-select">🪙 Moneda Cuántica:</label>
+        <select id="coin-select">
+          <option value="hadamard" selected>Moneda Hadamard (H)</option>
+          <option value="grover">Moneda de Grover (Difusión)</option>
+          <option value="balanced">Moneda Balanceada de Fase</option>
+        </select>
+      </div>
+
+      <button id="btn-show-qasm" class="btn" title="Exportar circuito a OpenQASM 3.0">
+        📜 OpenQASM 3.0
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- Active Labyrinth Banner -->
+    <section class="lab-banner">
+      <div id="lab-type" class="lab-badge">1D Line — Dificultad: Fácil</div>
+      <h2 id="lab-title" class="lab-title">1. Línea Multiversal 1D</h2>
+      <p id="lab-desc" class="lab-desc">Cargando topología de grafo...</p>
+    </section>
+
+    <!-- Arena Grid -->
+    <section class="arena-grid">
+
+      <!-- Left: Graph Canvas Visualizer -->
+      <article class="arena-panel">
+        <div class="panel-header">
+          <span class="panel-title">🕸️ Grafo Topológico & Superposición de Onda (Haz clic en un nodo para colocar Baliza de Fase 📡)</span>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">
+            🔵 Entrada | 🟡 Salida Portal | 🔴 Trampa de Fase
+          </div>
+        </div>
+
+        <div class="canvas-card">
+          <canvas id="canvas-graph" width="700" height="280"></canvas>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <button id="btn-step" class="btn primary">
+            ⚡ Dar 1 Paso Cuántico (t + 1)
+          </button>
+          <button id="btn-run" class="btn">
+            ▶️ Marcha Continua
+          </button>
+          <button id="btn-reset" class="btn">
+            🔄 Reiniciar Laberinto
+          </button>
+        </div>
+      </article>
+
+      <!-- Right: Real-Time Metrics & Classical Rival Race -->
+      <article class="arena-panel">
+        <div class="panel-header">
+          <span class="panel-title">🏁 Carrera Cuántica vs Clásica</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Hitting Time</span>
+        </div>
+
+        <div class="meters-grid">
+          <div class="meter-card quantum">
+            <div class="meter-label">Pasos Cuánticos (t)</div>
+            <div id="quantum-steps-val" class="meter-val" style="color: var(--quantum-cyan);">0</div>
+          </div>
+          <div class="meter-card classical">
+            <div class="meter-label">Pasos Clásicos Markov</div>
+            <div id="classical-steps-val" class="meter-val" style="color: var(--classical-green);">0</div>
+          </div>
+
+          <div class="meter-card quantum">
+            <div class="meter-label">Prob. en Portal Salida</div>
+            <div id="quantum-prob-val" class="meter-val" style="color: var(--quantum-cyan);">0.0%</div>
+          </div>
+          <div class="meter-card classical">
+            <div class="meter-label">Prob. Clásica Salida</div>
+            <div id="classical-prob-val" class="meter-val" style="color: var(--classical-green);">0.0%</div>
+          </div>
+
+          <div class="meter-card quantum">
+            <div class="meter-label">Dispersión Balística (σ)</div>
+            <div id="quantum-spread-val" class="meter-val" style="color: var(--quantum-cyan); font-size: 1.1rem;">σ = 0.0</div>
+          </div>
+          <div class="meter-card classical">
+            <div class="meter-label">Dispersión Difusiva (σ)</div>
+            <div id="classical-spread-val" class="meter-val" style="color: var(--classical-green); font-size: 1.1rem;">σ = 0.0</div>
+          </div>
+        </div>
+
+        <div id="victory-alert" class="victory-alert hidden">
+          🎉 ¡OBJETIVO ALCANZADO!
+        </div>
+
+        <div style="border-top: 1px solid var(--border-color); padding-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+          💡 <strong>Guía Cuántica:</strong> Los caminantes clásicos se dispersan aleatoriamente con $\sigma \propto \sqrt{t}$. El caminante cuántico aprovecha la interferencia constructiva de la moneda y los desfasadores para alcanzar el portal a velocidad lineal $\sigma \propto t$.
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <!-- OpenQASM 3.0 Modal -->
+  <div id="qasm-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Circuito OpenQASM 3.0 de Caminata Cuántica</h3>
+        <button id="btn-close-qasm" class="btn" style="padding: 0.2rem 0.6rem;">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Circuito cuántico con registro de posición y moneda cuántica con compuertas de desplazamiento condicional multicontroladas.
+        </p>
+        <pre><code id="qasm-content"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-copy-qasm" class="btn primary">Copiar al Portapapeles</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Codex — <strong>quantum-walk-multiverse-chronicles</strong> | Capa 4 de Computación Cuántica Híbrida | DTQW & Árboles Pegados de Childs</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
